@@ -28,7 +28,8 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.1",
     "@sabaki/sgf": "^3.4.7",
-    "sgf-to-image": "^0.2.2"
+    "sgf-to-image": "^0.2.2",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

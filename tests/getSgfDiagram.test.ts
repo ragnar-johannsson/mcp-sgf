@@ -140,13 +140,10 @@ describe('getSgfDiagram tool', () => {
     })
 
     it('should reject invalid SGF format', async () => {
-      const result = await handleGetSgfDiagram({
-        sgfContent: 'invalid sgf content',
-      })
-
+      const result = await handleGetSgfDiagram({ sgfContent: 'invalid sgf content' })
       expect(result.isError).toBe(true)
       const errorData = JSON.parse(result.content[0].text as string) as ErrorData
-      expect(errorData.error.type).toBe(SgfErrorType.INVALID_FORMAT)
+      expect(errorData.error.type).toBe(SgfErrorType.INVALID_PARAMETERS)
     })
 
     it('should reject both moveNumber and move range', async () => {
@@ -166,34 +163,31 @@ describe('getSgfDiagram tool', () => {
     it('should reject startMove without endMove', async () => {
       const result = await handleGetSgfDiagram({
         sgfContent: validSgf,
-        startMove: 1,
+        startMove: 5,
       })
-
       expect(result.isError).toBe(true)
       const errorData = JSON.parse(result.content[0].text as string) as ErrorData
-      expect(errorData.error.message).toContain('startMove requires endMove')
+      expect(errorData.error.message).toContain('Both startMove and endMove must be specified')
     })
 
     it('should reject endMove without startMove', async () => {
       const result = await handleGetSgfDiagram({
         sgfContent: validSgf,
-        endMove: 3,
+        endMove: 10,
       })
-
       expect(result.isError).toBe(true)
       const errorData = JSON.parse(result.content[0].text as string) as ErrorData
-      expect(errorData.error.message).toContain('endMove requires startMove')
+      expect(errorData.error.message).toContain('Both startMove and endMove must be specified')
     })
 
     it('should reject invalid dimensions', async () => {
       const result = await handleGetSgfDiagram({
         sgfContent: validSgf,
-        width: 50, // Below minimum
+        width: 50,
       })
-
       expect(result.isError).toBe(true)
       const errorData = JSON.parse(result.content[0].text as string) as ErrorData
-      expect(errorData.error.message).toContain('Width 50 is out of range')
+      expect(errorData.error.message).toContain('Width must be at least 100 pixels')
     })
   })
 

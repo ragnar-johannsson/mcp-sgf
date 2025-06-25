@@ -10,6 +10,11 @@ import {
   getSupportedFormats,
 } from '../utils/diagramRenderer.js'
 import { SgfError, SgfErrorType, type DiagramParameters } from '../types/sgf.js'
+import {
+  validateGetSgfDiagramArgs,
+  sanitizeInput,
+  validateStatelessProcessing,
+} from '../utils/validation.js'
 
 /**
  * MCP tool definition for get-sgf-diagram
@@ -105,34 +110,33 @@ interface ErrorResponse {
  * @param args - Tool arguments containing SGF content and diagram parameters
  * @returns Tool execution result with diagram image
  */
-export async function handleGetSgfDiagram(args: {
-  sgfContent: string
-  moveNumber?: number
-  startMove?: number
-  endMove?: number
-  width?: number
-  height?: number
-  coordLabels?: boolean
-  moveNumbers?: boolean
-  theme?: 'classic' | 'modern' | 'minimal'
-  format?: 'png' | 'svg'
-}): Promise<CallToolResult> {
+export async function handleGetSgfDiagram(args: unknown): Promise<CallToolResult> {
   try {
-    // Validate input
-    if (!args.sgfContent || typeof args.sgfContent !== 'string') {
-      throw new SgfError(
-        SgfErrorType.INVALID_PARAMETERS,
-        'Missing or invalid sgfContent parameter. Must be a non-empty string.'
-      )
+    // Ensure stateless processing (subtask 4.3)
+    validateStatelessProcessing()
+
+    // Validate and sanitize input using Zod schemas (subtask 4.2)
+    const validation = validateGetSgfDiagramArgs(args)
+    if (!validation.success) {
+      throw validation.error
     }
 
-    const sgfContent = args.sgfContent.trim()
+    const {
+      sgfContent: rawContent,
+      moveNumber,
+      startMove,
+      endMove,
+      width,
+      height,
+      coordLabels,
+      moveNumbers,
+      theme,
+      format,
+    } = validation.data
 
-    if (sgfContent.length === 0) {
-      throw new SgfError(SgfErrorType.INVALID_PARAMETERS, 'SGF content cannot be empty.')
-    }
+    const sgfContent = sanitizeInput(rawContent)
 
-    // Basic format validation
+    // Additional SGF format validation for enhanced security
     if (!validateSgfFormat(sgfContent)) {
       throw new SgfError(
         SgfErrorType.INVALID_FORMAT,
@@ -143,44 +147,21 @@ export async function handleGetSgfDiagram(args: {
     // Parse SGF to get game info and validate
     const parseResult = parseSgfGameInfo(sgfContent)
 
-    // Prepare diagram parameters
+    // Prepare diagram parameters (validation already handled by Zod)
     const diagramParams: DiagramParameters = {
-      ...(args.moveNumber !== undefined && { moveNumber: args.moveNumber }),
-      ...(args.startMove !== undefined && { startMove: args.startMove }),
-      ...(args.endMove !== undefined && { endMove: args.endMove }),
-      ...(args.width !== undefined && { width: args.width }),
-      ...(args.height !== undefined && { height: args.height }),
-      ...(args.coordLabels !== undefined && { coordLabels: args.coordLabels }),
-      ...(args.moveNumbers !== undefined && { moveNumbers: args.moveNumbers }),
-      ...(args.theme !== undefined && { theme: args.theme }),
-      format: args.format ?? 'png',
+      format: format ?? 'png',
       maxBoardSize: 361, // Support up to 361x361 boards
+      ...(moveNumber !== undefined && { moveNumber }),
+      ...(startMove !== undefined && { startMove }),
+      ...(endMove !== undefined && { endMove }),
+      ...(width !== undefined && { width }),
+      ...(height !== undefined && { height }),
+      ...(coordLabels !== undefined && { coordLabels }),
+      ...(moveNumbers !== undefined && { moveNumbers }),
+      ...(theme !== undefined && { theme }),
     }
 
-    // Validate parameter combinations
-    if (
-      args.moveNumber !== undefined &&
-      (args.startMove !== undefined || args.endMove !== undefined)
-    ) {
-      throw new SgfError(
-        SgfErrorType.INVALID_PARAMETERS,
-        'Cannot specify both moveNumber and move range (startMove/endMove). Use one or the other.'
-      )
-    }
-
-    if (args.startMove !== undefined && args.endMove === undefined) {
-      throw new SgfError(
-        SgfErrorType.INVALID_PARAMETERS,
-        'startMove requires endMove to be specified for range display.'
-      )
-    }
-
-    if (args.endMove !== undefined && args.startMove === undefined) {
-      throw new SgfError(
-        SgfErrorType.INVALID_PARAMETERS,
-        'endMove requires startMove to be specified for range display.'
-      )
-    }
+    // Note: Parameter validation (move combinations, ranges, etc.) is now handled by Zod schemas
 
     // Generate the diagram
     const diagramResult = await generateDiagram(

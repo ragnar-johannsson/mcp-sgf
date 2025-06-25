@@ -8,14 +8,15 @@
 - `vitest.config.ts` - Vitest configuration ensuring ≥95% coverage.
 - `.github/workflows/ci.yml` - GitHub Actions workflow to run lint, type-check, and tests on push.
 - `src/index.ts` - Entry point for the MCP-compatible API server; exposes both tools and starts via `npx`.
-- `src/tools/getSgfInfo.ts` - Implementation of the `get-sgf-info` tool.
-- `src/tools/getSgfDiagram.ts` - Implementation of the `get-sgf-diagram` tool with PNG/SVG output support.
+- `src/tools/getSgfInfo.ts` - Implementation of the `get-sgf-info` tool with enhanced Zod validation.
+- `src/tools/getSgfDiagram.ts` - Implementation of the `get-sgf-diagram` tool with PNG/SVG output support and comprehensive validation.
 - `src/utils/sgfParser.ts` - Wrapper utilities around **@sabaki/sgf** for tag extraction.
 - `src/utils/diagramRenderer.ts` - Helper for **sgf-to-image** rendering logic with validation and performance optimization.
+- `src/utils/validation.ts` - Comprehensive input validation utilities using **Zod** with sanitization and stateless processing checks.
 - `src/types/sgf.ts` - Shared TypeScript types for SGF metadata and diagram parameters including DiagramResult interface.
 - `tests/getSgfInfo.test.ts` - Unit tests for `getSgfInfo.ts`.
 - `tests/getSgfDiagram.test.ts` - Unit tests for `getSgfDiagram.ts` with performance benchmarks and board size validation.
-- `tests/validation.test.ts` - Tests covering input validation and error handling.
+- `tests/validation.test.ts` - Comprehensive tests covering input validation, error handling, and edge cases (56 test cases).
 
 ### Notes
 
@@ -50,11 +51,11 @@
   - [x] 3.4 Support board sizes up to 361 × 361 and validate ranges.
   - [x] 3.5 Write unit tests in `tests/getSgfDiagram.test.ts` including performance benchmarks (<500 ms).
 
-- [ ] 4.0 Input Validation & Error Handling
-  - [ ] 4.1 Implement validation utilities (e.g., using Zod) for SGF input and diagram parameters.
-  - [ ] 4.2 Handle malformed SGF, missing parameters, unsupported board sizes with clear error messages.
-  - [ ] 4.3 Ensure no data leakage between concurrent requests (stateless processing).
-  - [ ] 4.4 Create tests in `tests/validation.test.ts` for error scenarios.
+- [x] 4.0 Input Validation & Error Handling
+  - [x] 4.1 Implement validation utilities using **Zod** for SGF input and diagram parameters in `src/utils/validation.ts`.
+  - [x] 4.2 Handle malformed SGF, missing parameters, unsupported board sizes with clear error messages.
+  - [x] 4.3 Ensure no data leakage between concurrent requests (stateless processing validation).
+  - [x] 4.4 Create comprehensive tests in `tests/validation.test.ts` for 56 error scenarios and edge cases.
 
 - [ ] 5.0 Testing & Quality Assurance
   - [ ] 5.1 Achieve ≥95 % unit-test coverage across the codebase.

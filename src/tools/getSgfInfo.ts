@@ -4,6 +4,7 @@
 
 import type { Tool, TextContent, CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 import { parseSgfGameInfo, validateSgfFormat } from '../utils/sgfParser.js'
+import { validateGetSgfInfoArgs, sanitizeInput } from '../utils/validation.js'
 import { SgfError, SgfErrorType, type SgfGameInfo } from '../types/sgf.js'
 
 /**
@@ -53,23 +54,18 @@ interface ErrorResponse {
  * @param args - Tool arguments containing SGF content
  * @returns Tool execution result with game information
  */
-export function handleGetSgfInfo(args: { sgfContent: string }): CallToolResult {
+export function handleGetSgfInfo(args: unknown): CallToolResult {
   try {
-    // Validate input
-    if (!args.sgfContent || typeof args.sgfContent !== 'string') {
-      throw new SgfError(
-        SgfErrorType.INVALID_PARAMETERS,
-        'Missing or invalid sgfContent parameter. Must be a non-empty string.'
-      )
+    // Validate and sanitize input using Zod schemas
+    const validation = validateGetSgfInfoArgs(args)
+    if (!validation.success) {
+      throw validation.error
     }
 
-    const sgfContent = args.sgfContent.trim()
+    const { sgfContent: rawContent } = validation.data
+    const sgfContent = sanitizeInput(rawContent)
 
-    if (sgfContent.length === 0) {
-      throw new SgfError(SgfErrorType.INVALID_PARAMETERS, 'SGF content cannot be empty.')
-    }
-
-    // Basic format validation
+    // Additional SGF format validation for enhanced security
     if (!validateSgfFormat(sgfContent)) {
       throw new SgfError(
         SgfErrorType.INVALID_FORMAT,
