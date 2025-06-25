@@ -4,12 +4,51 @@
 
 /**
  * Complete SGF Game Information tags as per SGF specification
- * Covers all standard game information properties
+ * Covers all standard game information properties with user-friendly names
  */
 export interface SgfGameInfo {
   [key: string]: string | number | undefined
 
   // Game identification
+  gameName?: string | undefined // GN - Game name
+  gameComment?: string | undefined // GC - Game comment
+  event?: string | undefined // EV - Event
+  round?: string | undefined // RO - Round
+  date?: string | undefined // DT - Date
+  place?: string | undefined // PC - Place
+  source?: string | undefined // SO - Source
+  user?: string | undefined // US - User (who entered the game)
+  annotator?: string | undefined // AN - Annotator
+  copyright?: string | undefined // CP - Copyright
+
+  // Players
+  playerBlack?: string | undefined // PB - Black player name
+  playerWhite?: string | undefined // PW - White player name
+  blackRank?: string | undefined // BR - Black rank
+  whiteRank?: string | undefined // WR - White rank
+  blackTeam?: string | undefined // BT - Black team
+  whiteTeam?: string | undefined // WT - White team
+
+  // Game rules and setup
+  rules?: string | undefined // RU - Rules used
+  boardSize?: number | undefined // SZ - Board size
+  handicap?: number | undefined // HA - Handicap
+  komi?: number | undefined // KM - Komi
+  timeLimit?: number | undefined // TM - Time limit
+  overtime?: string | undefined // OT - Overtime system
+
+  // Game result
+  result?: string | undefined // RE - Result
+
+  // Application and file format
+  application?: string | undefined // AP - Application used to create SGF
+  charset?: string | undefined // CA - Character set
+  fileFormat?: number | undefined // FF - File format (SGF version)
+  gameType?: number | undefined // GM - Game type (1 = Go)
+  style?: number | undefined // ST - Style of showing variations
+  view?: string | undefined // VW - View part of board
+
+  // Keep raw SGF properties for backwards compatibility
   GN?: string | undefined // Game name
   GC?: string | undefined // Game comment
   EV?: string | undefined // Event
@@ -20,27 +59,19 @@ export interface SgfGameInfo {
   US?: string | undefined // User (who entered the game)
   AN?: string | undefined // Annotator
   CP?: string | undefined // Copyright
-
-  // Players
   PB?: string | undefined // Black player name
   PW?: string | undefined // White player name
   BR?: string | undefined // Black rank
   WR?: string | undefined // White rank
   BT?: string | undefined // Black team
   WT?: string | undefined // White team
-
-  // Game rules and setup
   RU?: string | undefined // Rules used
   SZ?: number | undefined // Board size
   HA?: number | undefined // Handicap
   KM?: number | undefined // Komi
   TM?: number | undefined // Time limit
   OT?: string | undefined // Overtime system
-
-  // Game result
   RE?: string | undefined // Result
-
-  // Application and file format
   AP?: string | undefined // Application used to create SGF
   CA?: string | undefined // Character set
   FF?: number | undefined // File format (SGF version)

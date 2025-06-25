@@ -59,7 +59,7 @@ export function parseSgfGameInfo(sgfContent: string): SgfParseResult {
 
     // Extract game information
     const gameInfo: SgfGameInfo = {
-      // Game identification
+      // Raw SGF properties for backwards compatibility
       GN: getPropertyValue(properties, 'GN'),
       GC: getPropertyValue(properties, 'GC'),
       EV: getPropertyValue(properties, 'EV'),
@@ -70,40 +70,63 @@ export function parseSgfGameInfo(sgfContent: string): SgfParseResult {
       US: getPropertyValue(properties, 'US'),
       AN: getPropertyValue(properties, 'AN'),
       CP: getPropertyValue(properties, 'CP'),
-
-      // Players
       PB: getPropertyValue(properties, 'PB'),
       PW: getPropertyValue(properties, 'PW'),
       BR: getPropertyValue(properties, 'BR'),
       WR: getPropertyValue(properties, 'WR'),
       BT: getPropertyValue(properties, 'BT'),
       WT: getPropertyValue(properties, 'WT'),
-
-      // Game rules and setup
       RU: getPropertyValue(properties, 'RU'),
       SZ: getNumericPropertyValue(properties, 'SZ'),
       HA: getNumericPropertyValue(properties, 'HA'),
       KM: getNumericPropertyValue(properties, 'KM'),
       TM: getNumericPropertyValue(properties, 'TM'),
       OT: getPropertyValue(properties, 'OT'),
-
-      // Game result
       RE: getPropertyValue(properties, 'RE'),
-
-      // Application and file format
       AP: getPropertyValue(properties, 'AP'),
       CA: getPropertyValue(properties, 'CA'),
       FF: getNumericPropertyValue(properties, 'FF'),
       GM: getNumericPropertyValue(properties, 'GM'),
       ST: getNumericPropertyValue(properties, 'ST'),
       VW: getPropertyValue(properties, 'VW'),
+
+      // User-friendly property names
+      gameName: getPropertyValue(properties, 'GN'),
+      gameComment: getPropertyValue(properties, 'GC'),
+      event: getPropertyValue(properties, 'EV'),
+      round: getPropertyValue(properties, 'RO'),
+      date: getPropertyValue(properties, 'DT'),
+      place: getPropertyValue(properties, 'PC'),
+      source: getPropertyValue(properties, 'SO'),
+      user: getPropertyValue(properties, 'US'),
+      annotator: getPropertyValue(properties, 'AN'),
+      copyright: getPropertyValue(properties, 'CP'),
+      playerBlack: getPropertyValue(properties, 'PB'),
+      playerWhite: getPropertyValue(properties, 'PW'),
+      blackRank: getPropertyValue(properties, 'BR'),
+      whiteRank: getPropertyValue(properties, 'WR'),
+      blackTeam: getPropertyValue(properties, 'BT'),
+      whiteTeam: getPropertyValue(properties, 'WT'),
+      rules: getPropertyValue(properties, 'RU'),
+      boardSize: getNumericPropertyValue(properties, 'SZ'),
+      handicap: getNumericPropertyValue(properties, 'HA'),
+      komi: getNumericPropertyValue(properties, 'KM'),
+      timeLimit: getNumericPropertyValue(properties, 'TM'),
+      overtime: getPropertyValue(properties, 'OT'),
+      result: getPropertyValue(properties, 'RE'),
+      application: getPropertyValue(properties, 'AP'),
+      charset: getPropertyValue(properties, 'CA'),
+      fileFormat: getNumericPropertyValue(properties, 'FF'),
+      gameType: getNumericPropertyValue(properties, 'GM'),
+      style: getNumericPropertyValue(properties, 'ST'),
+      view: getPropertyValue(properties, 'VW'),
     }
 
     // Count total moves in the game
     const totalMoves = countMoves(gameTree)
 
     // Determine board size (default to 19 if not specified)
-    const boardSize = gameInfo.SZ ?? 19
+    const boardSize = gameInfo.boardSize ?? 19
 
     // Validate board size
     if (boardSize < 1 || boardSize > 361) {
@@ -116,11 +139,11 @@ export function parseSgfGameInfo(sgfContent: string): SgfParseResult {
     const warnings: string[] = []
 
     // Add warnings for missing standard properties
-    if (!gameInfo.SZ) {
+    if (!gameInfo.boardSize) {
       warnings.push('Board size (SZ) not specified, assuming 19x19')
     }
 
-    if (!gameInfo.FF) {
+    if (!gameInfo.fileFormat) {
       warnings.push('File format (FF) not specified')
     }
 

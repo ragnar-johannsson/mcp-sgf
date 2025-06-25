@@ -269,6 +269,8 @@ export function validateSgfContent(
 
   if (firstError?.code === 'invalid_type') {
     errorType = SgfErrorType.INVALID_PARAMETERS
+  } else if (firstError?.code === 'too_small' && firstError.message.includes('empty')) {
+    errorType = SgfErrorType.INVALID_PARAMETERS
   } else if (firstError?.message.includes('too large')) {
     errorType = SgfErrorType.FILE_TOO_LARGE
   } else {
@@ -292,25 +294,49 @@ export function validateSgfContent(
 export function validateGetSgfInfoArgs(
   args: unknown
 ): { success: true; data: { sgfContent: string } } | { success: false; error: SgfError } {
-  const result = getSgfInfoArgsSchema.safeParse(args)
-
-  if (result.success) {
-    return { success: true, data: result.data }
+  // First validate the argument structure
+  if (!args || typeof args !== 'object') {
+    return {
+      success: false,
+      error: new SgfError(SgfErrorType.INVALID_PARAMETERS, 'Arguments must be an object', { args }),
+    }
   }
 
-  const firstError = result.error.issues[0]
-  return {
-    success: false,
-    error: new SgfError(
-      SgfErrorType.INVALID_PARAMETERS,
-      firstError?.message ?? 'Invalid arguments',
-      {
-        zodError: result.error,
-        issues: result.error.issues,
-        path: firstError?.path,
-      }
-    ),
+  const typedArgs = args as Record<string, unknown>
+
+  // Check if sgfContent is present
+  if (!('sgfContent' in typedArgs)) {
+    return {
+      success: false,
+      error: new SgfError(
+        SgfErrorType.INVALID_PARAMETERS,
+        'Missing required parameter: sgfContent',
+        { args }
+      ),
+    }
   }
+
+  // Validate sgfContent using the detailed validation function
+  const sgfValidation = validateSgfContent(typedArgs.sgfContent)
+  if (!sgfValidation.success) {
+    return { success: false, error: sgfValidation.error }
+  }
+
+  // Check for extra properties
+  const allowedKeys = ['sgfContent']
+  const extraKeys = Object.keys(typedArgs).filter(key => !allowedKeys.includes(key))
+  if (extraKeys.length > 0) {
+    return {
+      success: false,
+      error: new SgfError(
+        SgfErrorType.INVALID_PARAMETERS,
+        `Unexpected properties: ${extraKeys.join(', ')}`,
+        { extraKeys }
+      ),
+    }
+  }
+
+  return { success: true, data: { sgfContent: sgfValidation.data } }
 }
 
 /**

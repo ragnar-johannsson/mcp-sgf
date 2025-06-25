@@ -152,25 +152,25 @@ export function formatGameInfo(gameInfo: SgfGameInfo): string {
   const sections: string[] = []
 
   // Game Identification
-  if (gameInfo.GN || gameInfo.EV || gameInfo.RO) {
+  if (gameInfo.gameName || gameInfo.event || gameInfo.round) {
     const gameSection = []
-    if (gameInfo.GN) gameSection.push(`Game: ${String(gameInfo.GN)}`)
-    if (gameInfo.EV) gameSection.push(`Event: ${String(gameInfo.EV)}`)
-    if (gameInfo.RO) gameSection.push(`Round: ${String(gameInfo.RO)}`)
+    if (gameInfo.gameName) gameSection.push(`Game: ${String(gameInfo.gameName)}`)
+    if (gameInfo.event) gameSection.push(`Event: ${String(gameInfo.event)}`)
+    if (gameInfo.round) gameSection.push(`Round: ${String(gameInfo.round)}`)
     sections.push(gameSection.join('\n'))
   }
 
   // Players
-  if (gameInfo.PB || gameInfo.PW || gameInfo.BR || gameInfo.WR) {
+  if (gameInfo.playerBlack || gameInfo.playerWhite || gameInfo.blackRank || gameInfo.whiteRank) {
     const playerSection = []
-    if (gameInfo.PB) {
+    if (gameInfo.playerBlack) {
       playerSection.push(
-        `Black: ${String(gameInfo.PB)}${gameInfo.BR ? ` (${String(gameInfo.BR)})` : ''}`
+        `Black: ${String(gameInfo.playerBlack)}${gameInfo.blackRank ? ` (${String(gameInfo.blackRank)})` : ''}`
       )
     }
-    if (gameInfo.PW) {
+    if (gameInfo.playerWhite) {
       playerSection.push(
-        `White: ${String(gameInfo.PW)}${gameInfo.WR ? ` (${String(gameInfo.WR)})` : ''}`
+        `White: ${String(gameInfo.playerWhite)}${gameInfo.whiteRank ? ` (${String(gameInfo.whiteRank)})` : ''}`
       )
     }
     sections.push(playerSection.join('\n'))
@@ -178,24 +178,25 @@ export function formatGameInfo(gameInfo: SgfGameInfo): string {
 
   // Game Details
   const gameDetails = []
-  if (gameInfo.DT) gameDetails.push(`Date: ${String(gameInfo.DT)}`)
-  if (gameInfo.PC) gameDetails.push(`Place: ${String(gameInfo.PC)}`)
-  if (gameInfo.KM !== undefined) gameDetails.push(`Komi: ${String(gameInfo.KM)}`)
-  if (gameInfo.HA !== undefined && Number(gameInfo.HA) > 0)
-    gameDetails.push(`Handicap: ${String(gameInfo.HA)}`)
-  if (gameInfo.SZ) gameDetails.push(`Board Size: ${String(gameInfo.SZ)}x${String(gameInfo.SZ)}`)
-  if (gameInfo.RE) gameDetails.push(`Result: ${String(gameInfo.RE)}`)
+  if (gameInfo.date) gameDetails.push(`Date: ${String(gameInfo.date)}`)
+  if (gameInfo.place) gameDetails.push(`Place: ${String(gameInfo.place)}`)
+  if (gameInfo.komi !== undefined) gameDetails.push(`Komi: ${String(gameInfo.komi)}`)
+  if (gameInfo.handicap !== undefined && Number(gameInfo.handicap) > 0)
+    gameDetails.push(`Handicap: ${String(gameInfo.handicap)}`)
+  if (gameInfo.boardSize)
+    gameDetails.push(`Board Size: ${String(gameInfo.boardSize)}x${String(gameInfo.boardSize)}`)
+  if (gameInfo.result) gameDetails.push(`Result: ${String(gameInfo.result)}`)
   if (gameDetails.length > 0) {
     sections.push(gameDetails.join('\n'))
   }
 
   // Additional Information
   const additionalInfo = []
-  if (gameInfo.RU) additionalInfo.push(`Rules: ${String(gameInfo.RU)}`)
-  if (gameInfo.TM) additionalInfo.push(`Time Limit: ${String(gameInfo.TM)}`)
-  if (gameInfo.OT) additionalInfo.push(`Overtime: ${String(gameInfo.OT)}`)
-  if (gameInfo.AN) additionalInfo.push(`Annotator: ${String(gameInfo.AN)}`)
-  if (gameInfo.SO) additionalInfo.push(`Source: ${String(gameInfo.SO)}`)
+  if (gameInfo.rules) additionalInfo.push(`Rules: ${String(gameInfo.rules)}`)
+  if (gameInfo.timeLimit) additionalInfo.push(`Time Limit: ${String(gameInfo.timeLimit)}`)
+  if (gameInfo.overtime) additionalInfo.push(`Overtime: ${String(gameInfo.overtime)}`)
+  if (gameInfo.annotator) additionalInfo.push(`Annotator: ${String(gameInfo.annotator)}`)
+  if (gameInfo.source) additionalInfo.push(`Source: ${String(gameInfo.source)}`)
   if (additionalInfo.length > 0) {
     sections.push(additionalInfo.join('\n'))
   }

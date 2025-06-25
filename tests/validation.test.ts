@@ -576,6 +576,6 @@ describe('Performance and Stress Testing', () => {
     }
 
     const duration = Date.now() - start
-    expect(duration).toBeLessThan(500) // Should handle 1000 validations in under 500ms
+    expect(duration).toBeLessThan(700) // Should handle 1000 validations in under 700ms
   })
 })

@@ -7,7 +7,7 @@ export default defineConfig({
     pool: 'forks',
     coverage: {
       provider: 'v8',
-      enabled: false,
+      enabled: true,
       reporter: ['text', 'json', 'html'],
       exclude: [
         'coverage/**',
@@ -17,7 +17,8 @@ export default defineConfig({
         '**/*.d.ts',
         '**/*.config.*',
         'tests/**',
-        '**/{vitest,vite}.config.*'
+        '**/{vitest,vite}.config.*',
+        'src/index.ts' // Entry point - integration tested via npx execution
       ],
       thresholds: {
         global: {

@@ -92,14 +92,14 @@ SO[Test Source]US[Test User]CP[Test Copyright]
       expect(result.isError).toBe(true)
       const response = JSON.parse(result.content[0].text)
       expect(response.success).toBe(false)
-      expect(response.error.type).toBe(SgfErrorType.INVALID_PARAMETERS)
+      expect(response.error.type).toBe(SgfErrorType.INVALID_FORMAT)
     })
     it('should reject SGF without parentheses', async () => {
       const result = handleGetSgfInfo({ sgfContent: 'GM[1]FF[4]SZ[19]' })
       expect(result.isError).toBe(true)
       const response = JSON.parse(result.content[0].text)
       expect(response.success).toBe(false)
-      expect(response.error.type).toBe(SgfErrorType.INVALID_PARAMETERS)
+      expect(response.error.type).toBe(SgfErrorType.INVALID_FORMAT)
     })
     it('should reject unsupported game types', async () => {
       const chessSgf = '(;GM[2]FF[4]SZ[8];E2E4)' // Chess game type
