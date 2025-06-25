@@ -56,10 +56,25 @@ export interface DiagramParameters {
   moveNumber?: number // Specific move to show (0-based)
   startMove?: number // Start of move range
   endMove?: number // End of move range
-  width?: number // Image width in pixels
-  height?: number // Image height in pixels
-  coordLabels?: boolean // Show coordinate labels
-  moveNumbers?: boolean // Show move numbers
+  width?: number // Image width in pixels (default: 600)
+  height?: number // Image height in pixels (default: 600)
+  coordLabels?: boolean // Show coordinate labels (default: true)
+  moveNumbers?: boolean // Show move numbers (default: true)
+  theme?: 'classic' | 'modern' | 'minimal' // Visual theme (default: 'classic')
+  format?: 'png' | 'svg' // Output format (default: 'png')
+  maxBoardSize?: number // Maximum supported board size (default: 361)
+}
+
+/**
+ * Diagram generation result
+ */
+export interface DiagramResult {
+  imageData: string // Base64 encoded image data
+  mimeType: string // MIME type (image/png or image/svg+xml)
+  width: number // Actual image width
+  height: number // Actual image height
+  movesCovered: number // Number of moves shown in diagram
+  boardSize: number // Board size used
 }
 
 /**

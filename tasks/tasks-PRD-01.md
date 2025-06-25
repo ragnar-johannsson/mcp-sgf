@@ -9,12 +9,12 @@
 - `.github/workflows/ci.yml` - GitHub Actions workflow to run lint, type-check, and tests on push.
 - `src/index.ts` - Entry point for the MCP-compatible API server; exposes both tools and starts via `npx`.
 - `src/tools/getSgfInfo.ts` - Implementation of the `get-sgf-info` tool.
-- `src/tools/getSgfDiagram.ts` - Implementation of the `get-sgf-diagram` tool.
+- `src/tools/getSgfDiagram.ts` - Implementation of the `get-sgf-diagram` tool with PNG/SVG output support.
 - `src/utils/sgfParser.ts` - Wrapper utilities around **@sabaki/sgf** for tag extraction.
-- `src/utils/diagramRenderer.ts` - Helper for **sgf-to-image** rendering logic.
-- `src/types/sgf.ts` - Shared TypeScript types for SGF metadata and diagram parameters.
+- `src/utils/diagramRenderer.ts` - Helper for **sgf-to-image** rendering logic with validation and performance optimization.
+- `src/types/sgf.ts` - Shared TypeScript types for SGF metadata and diagram parameters including DiagramResult interface.
 - `tests/getSgfInfo.test.ts` - Unit tests for `getSgfInfo.ts`.
-- `tests/getSgfDiagram.test.ts` - Unit tests for `getSgfDiagram.ts`.
+- `tests/getSgfDiagram.test.ts` - Unit tests for `getSgfDiagram.ts` with performance benchmarks and board size validation.
 - `tests/validation.test.ts` - Tests covering input validation and error handling.
 
 ### Notes
@@ -43,12 +43,12 @@
   - [x] 2.5 Write unit tests in `tests/getSgfInfo.test.ts` covering happy and edge cases.
   - [x] 2.6 Benchmark performance (≤200 ms for ≤100 kB files) and optimise if necessary.
 
-- [ ] 3.0 `get-sgf-diagram` Tool Implementation
-  - [ ] 3.1 Design parameter types (moveNumber, start/end) in `src/types/sgf.ts`.
-  - [ ] 3.2 Implement diagram renderer helper in `src/utils/diagramRenderer.ts` using **sgf-to-image**.
-  - [ ] 3.3 Implement the MCP tool wrapper in `src/tools/getSgfDiagram.ts` returning PNG (`image/png`).
-  - [ ] 3.4 Support board sizes up to 361 × 361 and validate ranges.
-  - [ ] 3.5 Write unit tests in `tests/getSgfDiagram.test.ts` including performance benchmarks (<500 ms).
+- [x] 3.0 `get-sgf-diagram` Tool Implementation
+  - [x] 3.1 Design parameter types (moveNumber, start/end) in `src/types/sgf.ts`.
+  - [x] 3.2 Implement diagram renderer helper in `src/utils/diagramRenderer.ts` using **sgf-to-image**.
+  - [x] 3.3 Implement the MCP tool wrapper in `src/tools/getSgfDiagram.ts` returning PNG (`image/png`).
+  - [x] 3.4 Support board sizes up to 361 × 361 and validate ranges.
+  - [x] 3.5 Write unit tests in `tests/getSgfDiagram.test.ts` including performance benchmarks (<500 ms).
 
 - [ ] 4.0 Input Validation & Error Handling
   - [ ] 4.1 Implement validation utilities (e.g., using Zod) for SGF input and diagram parameters.

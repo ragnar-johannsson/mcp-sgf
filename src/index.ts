@@ -11,6 +11,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 
 // Import tools
 import { getSgfInfoTool, handleGetSgfInfo } from './tools/getSgfInfo.js'
+import { getSgfDiagramTool, handleGetSgfDiagram } from './tools/getSgfDiagram.js'
 
 /**
  * Create and configure MCP server
@@ -31,17 +32,33 @@ function createServer(): Server {
   // Register list_tools handler
   server.setRequestHandler(ListToolsRequestSchema, () =>
     Promise.resolve({
-      tools: [getSgfInfoTool],
+      tools: [getSgfInfoTool, getSgfDiagramTool],
     })
   )
 
   // Register call_tool handler
-  server.setRequestHandler(CallToolRequestSchema, request => {
+  server.setRequestHandler(CallToolRequestSchema, async request => {
     const { name, arguments: args } = request.params
 
     switch (name) {
       case 'get-sgf-info':
         return handleGetSgfInfo(args as { sgfContent: string })
+
+      case 'get-sgf-diagram':
+        return await handleGetSgfDiagram(
+          args as {
+            sgfContent: string
+            moveNumber?: number
+            startMove?: number
+            endMove?: number
+            width?: number
+            height?: number
+            coordLabels?: boolean
+            moveNumbers?: boolean
+            theme?: 'classic' | 'modern' | 'minimal'
+            format?: 'png' | 'svg'
+          }
+        )
 
       default:
         throw new Error(`Unknown tool: ${name}`)
