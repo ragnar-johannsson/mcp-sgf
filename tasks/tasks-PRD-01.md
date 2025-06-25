@@ -35,13 +35,13 @@
   - [x] 1.6 Configure Vitest with coverage reporting.
   - [x] 1.7 Set up GitHub Actions (or equivalent) CI to run lint, type-check, and test on push.
 
-- [ ] 2.0 `get-sgf-info` Tool Implementation
-  - [ ] 2.1 Design TypeScript interfaces in `src/types/sgf.ts` to represent SGF tags.
-  - [ ] 2.2 Implement SGF parsing helper in `src/utils/sgfParser.ts` leveraging **@sabaki/sgf**.
-  - [ ] 2.3 Implement the MCP tool in `src/tools/getSgfInfo.ts` adhering to the SDK's spec.
-  - [ ] 2.4 Ensure 100 % coverage of *Game Information* SGF tags.
-  - [ ] 2.5 Write unit tests in `tests/getSgfInfo.test.ts` covering happy and edge cases.
-  - [ ] 2.6 Benchmark performance (≤200 ms for ≤100 kB files) and optimise if necessary.
+- [x] 2.0 `get-sgf-info` Tool Implementation
+  - [x] 2.1 Design TypeScript interfaces in `src/types/sgf.ts` to represent SGF tags.
+  - [x] 2.2 Implement SGF parsing helper in `src/utils/sgfParser.ts` leveraging **@sabaki/sgf**.
+  - [x] 2.3 Implement the MCP tool in `src/tools/getSgfInfo.ts` adhering to the SDK's spec.
+  - [x] 2.4 Ensure 100 % coverage of *Game Information* SGF tags.
+  - [x] 2.5 Write unit tests in `tests/getSgfInfo.test.ts` covering happy and edge cases.
+  - [x] 2.6 Benchmark performance (≤200 ms for ≤100 kB files) and optimise if necessary.
 
 - [ ] 3.0 `get-sgf-diagram` Tool Implementation
   - [ ] 3.1 Design parameter types (moveNumber, start/end) in `src/types/sgf.ts`.
