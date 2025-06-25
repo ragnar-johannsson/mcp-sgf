@@ -1,0 +1,469 @@
+openapi: 3.0.3
+info:
+  title: MCP SGF Server API
+  description: |
+    MCP (Model Context Protocol) server for processing SGF (Smart Game Format) files.
+    Provides tools for extracting game information and generating visual board diagrams.
+  version: 0.1.0
+  contact:
+    name: MCP SGF Server
+  license:
+    name: MIT
+
+servers:
+  - url: mcp://mcp-sgf
+    description: MCP protocol endpoint
+
+tags:
+  - name: sgf-info
+    description: Extract game information from SGF files
+  - name: sgf-diagram
+    description: Generate visual diagrams from SGF files
+
+paths:
+  /tools/get-sgf-info:
+    post:
+      tags:
+        - sgf-info
+      summary: Extract SGF game information
+      description: |
+        Extract comprehensive game information from SGF files including player names,
+        ranks, game details, rules, and result. Supports all standard SGF properties.
+      operationId: getSgfInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetSgfInfoRequest'
+            examples:
+              basic-game:
+                summary: Basic game information
+                value:
+                  sgfContent: "(;FF[4]GM[1]SZ[19]PB[Lee Sedol]PW[AlphaGo]BR[9p]WR[-]KM[7.5]RE[W+R];B[pd];W[dp])"
+              tournament-game:
+                summary: Tournament game with metadata
+                value:
+                  sgfContent: "(;FF[4]GM[1]SZ[19]EV[World Championship]RO[Final]DT[2024-01-01]PB[Player Black]PW[Player White]BR[9p]WR[9p]KM[7.5]HA[0]RE[B+2.5];B[pd];W[dp];B[cd];W[qp])"
+      responses:
+        '200':
+          description: Successfully extracted game information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSgfInfoResponse'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Invalid SGF format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tools/get-sgf-diagram:
+    post:
+      tags:
+        - sgf-diagram
+      summary: Generate SGF board diagram
+      description: |
+        Generate visual board diagrams from SGF files with customizable appearance.
+        Supports PNG and SVG output formats with various styling options.
+      operationId: getSgfDiagram
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetSgfDiagramRequest'
+            examples:
+              final-position:
+                summary: Final position with default settings
+                value:
+                  sgfContent: "(;FF[4]GM[1]SZ[19];B[pd];W[dp];B[cd];W[qp])"
+              specific-move:
+                summary: Specific move with custom dimensions
+                value:
+                  sgfContent: "(;FF[4]GM[1]SZ[19];B[pd];W[dp];B[cd];W[qp])"
+                  moveNumber: 2
+                  width: 800
+                  height: 800
+                  theme: "modern"
+              move-range-svg:
+                summary: Move range in SVG format
+                value:
+                  sgfContent: "(;FF[4]GM[1]SZ[19];B[pd];W[dp];B[cd];W[qp];B[ed];W[fq])"
+                  startMove: 1
+                  endMove: 4
+                  format: "svg"
+                  coordLabels: false
+      responses:
+        '200':
+          description: Successfully generated diagram
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSgfDiagramResponse'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Invalid SGF format or diagram parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    GetSgfInfoRequest:
+      type: object
+      required:
+        - sgfContent
+      properties:
+        sgfContent:
+          type: string
+          description: The complete SGF file content as a string. Must be valid SGF format.
+          example: "(;FF[4]GM[1]SZ[19]PB[Black]PW[White];B[pd];W[dp])"
+
+    GetSgfInfoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            gameInfo:
+              $ref: '#/components/schemas/SgfGameInfo'
+            metadata:
+              $ref: '#/components/schemas/SgfMetadata'
+            warnings:
+              type: array
+              items:
+                type: string
+              description: Optional warnings about the SGF content
+              example: []
+
+    GetSgfDiagramRequest:
+      type: object
+      required:
+        - sgfContent
+      properties:
+        sgfContent:
+          type: string
+          description: The complete SGF file content as a string. Must be valid SGF format.
+          example: "(;FF[4]GM[1]SZ[19];B[pd];W[dp];B[cd];W[qp])"
+        moveNumber:
+          type: integer
+          minimum: 0
+          description: Specific move number to display (0-based). If not specified, shows final position.
+          example: 5
+        startMove:
+          type: integer
+          minimum: 0
+          description: Start of move range to display (0-based). Use with endMove for range display.
+          example: 1
+        endMove:
+          type: integer
+          minimum: 0
+          description: End of move range to display (0-based). Use with startMove for range display.
+          example: 10
+        width:
+          type: integer
+          minimum: 100
+          maximum: 2000
+          default: 600
+          description: Image width in pixels.
+          example: 800
+        height:
+          type: integer
+          minimum: 100
+          maximum: 2000
+          default: 600
+          description: Image height in pixels.
+          example: 800
+        coordLabels:
+          type: boolean
+          default: true
+          description: Whether to show coordinate labels.
+          example: true
+        moveNumbers:
+          type: boolean
+          default: true
+          description: Whether to show move numbers on stones.
+          example: false
+        theme:
+          type: string
+          enum: [classic, modern, minimal]
+          default: classic
+          description: Visual theme for the board.
+          example: "modern"
+        format:
+          type: string
+          enum: [png, svg]
+          default: png
+          description: Output image format.
+          example: "png"
+
+    GetSgfDiagramResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            mimeType:
+              type: string
+              description: MIME type of the generated image
+              example: "image/png"
+            width:
+              type: integer
+              description: Actual image width in pixels
+              example: 600
+            height:
+              type: integer
+              description: Actual image height in pixels
+              example: 600
+            movesCovered:
+              type: integer
+              description: Number of moves shown in the diagram
+              example: 25
+            boardSize:
+              type: integer
+              description: Board size used for the diagram
+              example: 19
+            parameters:
+              $ref: '#/components/schemas/DiagramParameters'
+
+    SgfGameInfo:
+      type: object
+      description: Complete SGF game information with both user-friendly and raw property names
+      properties:
+        # User-friendly property names
+        playerBlack:
+          type: string
+          description: Black player name
+          example: "Lee Sedol"
+        playerWhite:
+          type: string
+          description: White player name
+          example: "AlphaGo"
+        blackRank:
+          type: string
+          description: Black player rank
+          example: "9p"
+        whiteRank:
+          type: string
+          description: White player rank
+          example: "-"
+        boardSize:
+          type: integer
+          description: Board size (typically 9, 13, or 19)
+          example: 19
+        komi:
+          type: number
+          description: Komi points for white
+          example: 7.5
+        handicap:
+          type: integer
+          description: Number of handicap stones
+          example: 0
+        result:
+          type: string
+          description: Game result (e.g., "W+2.5", "B+R")
+          example: "W+R"
+        date:
+          type: string
+          description: Game date
+          example: "2016-03-09"
+        event:
+          type: string
+          description: Tournament or event name
+          example: "Google DeepMind Challenge Match"
+        round:
+          type: string
+          description: Round or game number
+          example: "Game 1"
+        place:
+          type: string
+          description: Location where game was played
+          example: "Seoul, South Korea"
+        rules:
+          type: string
+          description: Rule set used
+          example: "Chinese"
+        timeLimit:
+          type: integer
+          description: Time limit in seconds
+          example: 7200
+        overtime:
+          type: string
+          description: Overtime system description
+          example: "3x60s byo-yomi"
+        gameType:
+          type: integer
+          description: Game type (1 = Go)
+          example: 1
+        fileFormat:
+          type: integer
+          description: SGF file format version
+          example: 4
+        # Raw SGF properties for backward compatibility
+        PB:
+          type: string
+          description: Raw SGF property - Black player
+        PW:
+          type: string
+          description: Raw SGF property - White player
+        BR:
+          type: string
+          description: Raw SGF property - Black rank
+        WR:
+          type: string
+          description: Raw SGF property - White rank
+        SZ:
+          type: integer
+          description: Raw SGF property - Board size
+        KM:
+          type: number
+          description: Raw SGF property - Komi
+        HA:
+          type: integer
+          description: Raw SGF property - Handicap
+        RE:
+          type: string
+          description: Raw SGF property - Result
+        DT:
+          type: string
+          description: Raw SGF property - Date
+        EV:
+          type: string
+          description: Raw SGF property - Event
+        RO:
+          type: string
+          description: Raw SGF property - Round
+        PC:
+          type: string
+          description: Raw SGF property - Place
+        RU:
+          type: string
+          description: Raw SGF property - Rules
+        TM:
+          type: integer
+          description: Raw SGF property - Time limit
+        OT:
+          type: string
+          description: Raw SGF property - Overtime
+        GM:
+          type: integer
+          description: Raw SGF property - Game type
+        FF:
+          type: integer
+          description: Raw SGF property - File format
+
+    SgfMetadata:
+      type: object
+      properties:
+        totalMoves:
+          type: integer
+          description: Total number of moves in the game
+          example: 245
+        boardSize:
+          type: integer
+          description: Board size detected from SGF
+          example: 19
+        hasValidStructure:
+          type: boolean
+          description: Whether the SGF has valid structure
+          example: true
+
+    DiagramParameters:
+      type: object
+      description: Applied diagram generation parameters
+      properties:
+        format:
+          type: string
+          example: "png"
+        width:
+          type: integer
+          example: 600
+        height:
+          type: integer
+          example: 600
+        coordLabels:
+          type: boolean
+          example: true
+        moveNumbers:
+          type: boolean
+          example: true
+        theme:
+          type: string
+          example: "classic"
+        moveNumber:
+          type: integer
+          example: 5
+        startMove:
+          type: integer
+          example: 1
+        endMove:
+          type: integer
+          example: 10
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: 
+                - INVALID_FORMAT
+                - INVALID_PARAMETERS
+                - PARSING_ERROR
+                - UNSUPPORTED_GAME
+                - FILE_TOO_LARGE
+              description: Error type category
+              example: "INVALID_FORMAT"
+            message:
+              type: string
+              description: Human-readable error description
+              example: "Invalid SGF format. SGF files must start with '(' and end with ')' and contain at least one property."
+            details:
+              type: object
+              description: Additional error details (optional)
+              additionalProperties: true
+
+  examples:
+    SimpleGame:
+      summary: Simple game with basic information
+      value:
+        sgfContent: "(;FF[4]GM[1]SZ[19]PB[Black]PW[White];B[pd];W[dp];B[cd];W[qp])"
+
+    TournamentGame:
+      summary: Tournament game with full metadata
+      value:
+        sgfContent: "(;FF[4]GM[1]SZ[19]EV[World Championship]RO[Final]DT[2024-01-01]PB[Player Black]PW[Player White]BR[9p]WR[9p]KM[7.5]HA[0]RE[B+2.5]PC[Tokyo, Japan]TM[7200]OT[3x30s];B[pd];W[dp];B[cd];W[qp];B[ed];W[fq])"
+
+    InvalidSgf:
+      summary: Invalid SGF format
+      value:
+        sgfContent: "invalid sgf content"
+
+externalDocs:
+  description: Model Context Protocol Specification
+  url: https://modelcontextprotocol.io/ 

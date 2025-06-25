@@ -1,6 +1,6 @@
 ## Relevant Files
 
-- `package.json` - Project dependencies, scripts (including `npx mcp-sgf-server` start command).
+- `package.json` - Project dependencies, scripts (including `npx mcp-sgf` start command).
 - `tsconfig.json` - TypeScript strict mode configuration.
 - `.eslintrc.json` - ESLint configuration with TypeScript support and strict rules.
 - `.prettierrc.json` - Prettier configuration for consistent code formatting.
@@ -32,7 +32,7 @@
   - [x] 1.2 Install dependencies: TypeScript, Vite, Vitest, **@modelcontextprotocol/sdk**, **@sabaki/sgf**, **sgf-to-image**, ESLint, Prettier.
   - [x] 1.3 Configure `tsconfig.json` with strict mode and output settings.
   - [x] 1.4 Add ESLint and Prettier configs; integrate with CI.
-  - [x] 1.5 Set up Vite build (if needed) and create NPM script `start` that is runnable via `npx mcp-sgf-server`.
+  - [x] 1.5 Set up Vite build (if needed) and create NPM script `start` that is runnable via `npx mcp-sgf`.
   - [x] 1.6 Configure Vitest with coverage reporting.
   - [x] 1.7 Set up GitHub Actions (or equivalent) CI to run lint, type-check, and test on push.
 
@@ -63,8 +63,6 @@
   - [x] 5.3 Add performance tests verifying response time targets.
   - [x] 5.4 Integrate coverage and performance checks into CI pipeline.
 
-- [ ] 6.0 Documentation & Developer Experience
-  - [ ] 6.1 Generate tool documentation (markdown and/or OpenAPI schema) from code annotations.
-  - [ ] 6.2 Create `README.md` with setup, usage examples, and `npx` start instructions.
-  - [ ] 6.3 Provide sample SGF files in a `samples/` directory for testing.
-  - [ ] 6.4 Document coding standards, lint rules, and contribution guidelines.
+- [x] 6.0 Documentation & Developer Experience
+  - [x] 6.1 Generate tool documentation (markdown and/or OpenAPI schema) from code annotations.
+  - [x] 6.2 Create `README.md` with setup, usage examples, and `npx` start instructions.

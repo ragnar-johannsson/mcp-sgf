@@ -19,8 +19,8 @@ import { getSgfDiagramTool, handleGetSgfDiagram } from './tools/getSgfDiagram.js
 function createServer(): Server {
   const server = new Server(
     {
-      name: 'mcp-sgf-server',
-      version: '1.0.0',
+      name: 'mcp-sgf',
+      version: '0.1.0',
     },
     {
       capabilities: {
