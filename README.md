@@ -46,6 +46,33 @@ npm run build
 npm start
 ```
 
+### Client Configuration
+
+To use this server with MCP-compatible clients (Claude Desktop, etc.), add the following configuration:
+
+**Claude Desktop Configuration (`claude_desktop_config.json`):**
+```json
+{
+  "mcpServers": {
+    "sgf": {
+      "command": "npx",
+      "args": ["mcp-sgf"]
+    }
+  }
+}
+```
+
+**Alternative with local installation:**
+```json
+{
+  "mcpServers": {
+    "sgf": {
+      "command": "mcp-sgf"
+    }
+  }
+}
+```
+
 ## Usage
 
 The MCP SGF server provides two main tools that can be called via the MCP protocol:
@@ -185,33 +212,6 @@ npm run type-check # TypeScript type checking
 ```
 
 ## Client Integration
-
-### MCP Client Configuration
-
-To use this server with MCP-compatible clients (Claude Desktop, etc.), add the following configuration:
-
-**Claude Desktop Configuration (`claude_desktop_config.json`):**
-```json
-{
-  "mcpServers": {
-    "sgf": {
-      "command": "npx",
-      "args": ["mcp-sgf"]
-    }
-  }
-}
-```
-
-**Alternative with local installation:**
-```json
-{
-  "mcpServers": {
-    "sgf": {
-      "command": "mcp-sgf"
-    }
-  }
-}
-```
 
 ### MCP Protocol JSON Examples
 
