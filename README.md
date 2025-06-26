@@ -118,7 +118,7 @@ Create visual board diagrams showing game positions with customizable appearance
     "mimeType": "image/png",
     "width": 800,
     "height": 800,
-    "movesCovered": 5,
+    "movesCovered": 4,
     "boardSize": 19,
     "parameters": {
       "moveNumber": 4,
@@ -144,9 +144,9 @@ The response includes base64-encoded image data with the specified MIME type.
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `sgfContent` | string | ✓ | - | Complete SGF file content |
-| `moveNumber` | number | ✗ | final | Specific move to display (0-based) |
-| `startMove` | number | ✗ | - | Start of move range |
-| `endMove` | number | ✗ | - | End of move range |
+| `moveNumber` | number | ✗ | final | Specific move to display (1-based) |
+| `startMove` | number | ✗ | - | Start of move range (1-based) |
+| `endMove` | number | ✗ | - | End of move range (1-based) |
 | `width` | number | ✗ | 600 | Image width (100-2000) |
 | `height` | number | ✗ | 600 | Image height (100-2000) |
 | `coordLabels` | boolean | ✗ | true | Show coordinate labels |

@@ -70,25 +70,25 @@ function validateDiagramParameters(
 
   // Validate move numbers
   if (params.moveNumber !== undefined) {
-    if (params.moveNumber < 0 || params.moveNumber > totalMoves) {
+    if (params.moveNumber < 1 || params.moveNumber > totalMoves) {
       throw new SgfError(
         SgfErrorType.INVALID_PARAMETERS,
-        `Move number ${params.moveNumber} is out of range (0-${totalMoves})`
+        `Move number ${params.moveNumber} is out of range (1-${totalMoves})`
       )
     }
   }
 
   if (params.startMove !== undefined && params.endMove !== undefined) {
-    if (params.startMove < 0 || params.startMove > totalMoves) {
+    if (params.startMove < 1 || params.startMove > totalMoves) {
       throw new SgfError(
         SgfErrorType.INVALID_PARAMETERS,
-        `Start move ${params.startMove} is out of range (0-${totalMoves})`
+        `Start move ${params.startMove} is out of range (1-${totalMoves})`
       )
     }
-    if (params.endMove < 0 || params.endMove > totalMoves) {
+    if (params.endMove < 1 || params.endMove > totalMoves) {
       throw new SgfError(
         SgfErrorType.INVALID_PARAMETERS,
-        `End move ${params.endMove} is out of range (0-${totalMoves})`
+        `End move ${params.endMove} is out of range (1-${totalMoves})`
       )
     }
     if (params.startMove > params.endMove) {
@@ -146,12 +146,12 @@ export async function generateDiagram(
       theme: params.theme ?? 'classic',
     }
 
-    // Set move number if specified
+    // sgf-to-image expects 0-based move index. Convert user-supplied 1-based values.
     if (params.moveNumber !== undefined) {
-      options.moveNumber = params.moveNumber
+      options.moveNumber = params.moveNumber - 1
     } else if (params.endMove !== undefined) {
-      // Use end move if range is specified
-      options.moveNumber = params.endMove
+      // Use end move if range is specified (convert to 0-based)
+      options.moveNumber = params.endMove - 1
     }
 
     // Generate the image
@@ -174,7 +174,7 @@ export async function generateDiagram(
     // Calculate moves covered
     let movesCovered = 0
     if (params.moveNumber !== undefined) {
-      movesCovered = params.moveNumber + 1
+      movesCovered = params.moveNumber
     } else if (params.startMove !== undefined && params.endMove !== undefined) {
       movesCovered = params.endMove - params.startMove + 1
     } else {

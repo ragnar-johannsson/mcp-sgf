@@ -206,7 +206,7 @@ describe('Diagram Parameters Validation', () => {
       const result = diagramParametersSchema.safeParse(params)
       expect(result.success).toBe(false)
       if (!result.success) {
-        expect(result.error.issues[0]?.message).toContain('non-negative')
+        expect(result.error.issues[0]?.message).toContain('at least 1')
       }
     })
 
@@ -489,9 +489,9 @@ describe('Error Scenarios and Edge Cases', () => {
   describe('Parameter boundary testing', () => {
     it('should handle boundary values for move numbers', () => {
       const boundaryCases = [
-        { moveNumber: 0 }, // minimum
+        { moveNumber: 1 }, // minimum
         { moveNumber: 1000 }, // maximum
-        { startMove: 0, endMove: 1000 }, // range boundaries
+        { startMove: 1, endMove: 1000 }, // range boundaries
       ]
 
       boundaryCases.forEach(params => {

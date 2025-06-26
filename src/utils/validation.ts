@@ -43,19 +43,19 @@ export const diagramParametersSchema = z
     moveNumber: z
       .number()
       .int('Move number must be an integer')
-      .min(0, 'Move number must be non-negative')
+      .min(1, 'Move number must be at least 1')
       .max(1000, 'Move number too large (max 1000)')
       .optional(),
     startMove: z
       .number()
       .int('Start move must be an integer')
-      .min(0, 'Start move must be non-negative')
+      .min(1, 'Start move must be at least 1')
       .max(1000, 'Start move too large (max 1000)')
       .optional(),
     endMove: z
       .number()
       .int('End move must be an integer')
-      .min(0, 'End move must be non-negative')
+      .min(1, 'End move must be at least 1')
       .max(1000, 'End move too large (max 1000)')
       .optional(),
     width: z
@@ -154,19 +154,19 @@ export const getSgfDiagramArgsSchema = z
     moveNumber: z
       .number()
       .int('Move number must be an integer')
-      .min(0, 'Move number must be non-negative')
+      .min(1, 'Move number must be at least 1')
       .max(1000, 'Move number too large (max 1000)')
       .optional(),
     startMove: z
       .number()
       .int('Start move must be an integer')
-      .min(0, 'Start move must be non-negative')
+      .min(1, 'Start move must be at least 1')
       .max(1000, 'Start move too large (max 1000)')
       .optional(),
     endMove: z
       .number()
       .int('End move must be an integer')
-      .min(0, 'End move must be non-negative')
+      .min(1, 'End move must be at least 1')
       .max(1000, 'End move too large (max 1000)')
       .optional(),
     width: z

@@ -122,18 +122,18 @@ Generate visual board diagrams from SGF files with customizable appearance and p
     },
     "moveNumber": {
       "type": "number",
-      "description": "Specific move number to display (0-based). If not specified, shows final position.",
-      "minimum": 0
+      "description": "Specific move number to display (1-based). If not specified, shows final position.",
+      "minimum": 1
     },
     "startMove": {
       "type": "number",
-      "description": "Start of move range to display (0-based). Use with endMove for range display.",
-      "minimum": 0
+      "description": "Start of move range to display (1-based). Use with endMove for range display.",
+      "minimum": 1
     },
     "endMove": {
       "type": "number",
-      "description": "End of move range to display (0-based). Use with startMove for range display.",
-      "minimum": 0
+      "description": "End of move range to display (1-based). Use with startMove for range display.",
+      "minimum": 1
     },
     "width": {
       "type": "number",
@@ -175,9 +175,9 @@ Generate visual board diagrams from SGF files with customizable appearance and p
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `sgfContent` | string | ✓ | - | Complete SGF file content in valid SGF format |
-| `moveNumber` | number | ✗ | final position | Specific move to display (0-based) |
-| `startMove` | number | ✗ | - | Start of move range (use with endMove) |
-| `endMove` | number | ✗ | - | End of move range (use with startMove) |
+| `moveNumber` | number | ✗ | final position | Specific move to display (1-based) |
+| `startMove` | number | ✗ | - | Start of move range (1-based) (use with endMove) |
+| `endMove` | number | ✗ | - | End of move range (1-based) (use with startMove) |
 | `width` | number | ✗ | 600 | Image width in pixels (100-2000) |
 | `height` | number | ✗ | 600 | Image height in pixels (100-2000) |
 | `coordLabels` | boolean | ✗ | true | Show coordinate labels (A-T, 1-19) |

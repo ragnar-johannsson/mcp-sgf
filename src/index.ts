@@ -23,8 +23,13 @@ function createServer(): Server {
       version: '0.1.0',
     },
     {
+      // Expose available tools in the initial capabilities handshake so clients
+      // can discover them without sending an explicit tools/list request.
       capabilities: {
-        tools: {},
+        tools: {
+          'get-sgf-info': getSgfInfoTool,
+          'get-sgf-diagram': getSgfDiagramTool,
+        },
       },
     }
   )

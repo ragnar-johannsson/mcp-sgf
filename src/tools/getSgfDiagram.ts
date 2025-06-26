@@ -33,20 +33,20 @@ export const getSgfDiagramTool: Tool = {
       moveNumber: {
         type: 'number',
         description:
-          'Specific move number to display (0-based). If not specified, shows final position.',
-        minimum: 0,
+          'Specific move number to display (1-based). If not specified, shows final position.',
+        minimum: 1,
       },
       startMove: {
         type: 'number',
         description:
-          'Start of move range to display (0-based). Use with endMove for range display.',
-        minimum: 0,
+          'Start of move range to display (1-based). Use with endMove for range display.',
+        minimum: 1,
       },
       endMove: {
         type: 'number',
         description:
-          'End of move range to display (0-based). Use with startMove for range display.',
-        minimum: 0,
+          'End of move range to display (1-based). Use with startMove for range display.',
+        minimum: 1,
       },
       width: {
         type: 'number',

@@ -90,7 +90,7 @@ describe('getSgfDiagram tool', () => {
       })
 
       expect(result.content[0].type).toBe('image')
-      expect((result.metadata as DiagramToolMetadata)?.movesCovered).toBe(3) // moveNumber + 1
+      expect((result.metadata as DiagramToolMetadata)?.movesCovered).toBe(2) // movesCovered should equal moveNumber for 1-based indexing
     })
 
     it('should handle move range', async () => {

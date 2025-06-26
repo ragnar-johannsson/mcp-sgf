@@ -164,18 +164,18 @@ components:
           example: "(;FF[4]GM[1]SZ[19];B[pd];W[dp];B[cd];W[qp])"
         moveNumber:
           type: integer
-          minimum: 0
-          description: Specific move number to display (0-based). If not specified, shows final position.
+          minimum: 1
+          description: Specific move number to display (1-based). The first move is 1. If not specified, shows final position.
           example: 5
         startMove:
           type: integer
-          minimum: 0
-          description: Start of move range to display (0-based). Use with endMove for range display.
+          minimum: 1
+          description: Start of move range to display (1-based). Use with endMove for range display.
           example: 1
         endMove:
           type: integer
-          minimum: 0
-          description: End of move range to display (0-based). Use with startMove for range display.
+          minimum: 1
+          description: End of move range to display (1-based). Use with startMove for range display.
           example: 10
         width:
           type: integer

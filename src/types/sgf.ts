@@ -84,9 +84,9 @@ export interface SgfGameInfo {
  * Parameters for diagram generation
  */
 export interface DiagramParameters {
-  moveNumber?: number // Specific move to show (0-based)
-  startMove?: number // Start of move range
-  endMove?: number // End of move range
+  moveNumber?: number // Specific move to show (1-based). 1 = first move
+  startMove?: number // Start of move range (1-based)
+  endMove?: number // End of move range (1-based)
   width?: number // Image width in pixels (default: 600)
   height?: number // Image height in pixels (default: 600)
   coordLabels?: boolean // Show coordinate labels (default: true)
