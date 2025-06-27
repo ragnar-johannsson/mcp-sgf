@@ -91,7 +91,11 @@ async function main(): Promise<void> {
 }
 
 // Start server if this file is run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Check if this module is being executed directly (works with both node and npx)
+const isMainModule =
+  import.meta.url === `file://${process.argv[1]}` || process.argv[1].includes('mcp-sgf')
+
+if (isMainModule) {
   void main().catch((error: unknown) => {
     console.error('Server error:', error)
     process.exit(1)
